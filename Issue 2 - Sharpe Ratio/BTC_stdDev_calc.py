@@ -1,0 +1,55 @@
+import pandas as pd
+import numpy as np
+
+
+def read_ohlcv_from_csv(filepath):
+    """
+    Read OHLCV data from a CSV file into a DataFrame.
+
+    :param filepath: Path to the CSV file
+    :return: DataFrame with columns [timestamp, open, high, low, close, volume]
+    """
+    df = pd.read_csv(filepath)
+
+    # Convert timestamp to datetime if it's not already
+    if not pd.api.types.is_datetime64_any_dtype(df['timestamp']):
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
+    return df
+
+
+def calculate_daily_returns(df):
+    """
+    Calculate daily returns from the close prices and convert to percentage terms.
+
+    :param df: DataFrame with historical OHLCV data
+    :return: Series of daily returns in percentage terms
+    """
+    df['daily_return'] = df['close'].pct_change()  # Multiply by 100 here
+    return df['daily_return'].dropna()
+
+
+def calculate_standard_deviation(daily_returns):
+    """
+    Calculate the standard deviation of daily returns.
+
+    :param daily_returns: Series of daily returns
+    :return: Standard deviation of daily returns
+    """
+    return np.std(daily_returns)
+
+
+# Specify the file path where the data is saved
+filepath = 'btc_usdt_ohlcv_last_25_days.csv'
+
+# Read data from CSV
+df = read_ohlcv_from_csv(filepath)
+
+# Calculate daily returns
+daily_returns = calculate_daily_returns(df)
+
+# Calculate the standard deviation of daily returns
+std_dev = calculate_standard_deviation(daily_returns)
+
+# Print the standard deviation in % terms (x100)
+print(
+    f'The standard deviation of the last {len(daily_returns)} daily returns for BTC/USDT is {std_dev*100: .2f}%')

@@ -1,0 +1,4 @@
+ccxt
+cryptocompare
+pandas
+numpy
