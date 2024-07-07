@@ -53,3 +53,27 @@ std_dev = calculate_standard_deviation(daily_returns)
 # Print the standard deviation in % terms (x100)
 print(
     f'The standard deviation of the last {len(daily_returns)} daily returns for BTC/USDT is {std_dev*100: .2f}%')
+
+
+def calculate_daily_returns(df):
+    """
+    Calculate daily returns from the close prices and convert to percentage terms.
+    Also, calculate the average daily return.
+
+    :param df: DataFrame with historical OHLCV data
+    :return: Tuple containing:
+             - Series of daily returns in percentage terms
+             - Average daily return in percentage terms
+    """
+    df['daily_return'] = df['close'].pct_change()  # Calculate daily returns
+    daily_returns = df['daily_return'].dropna()  # Drop the first NaN value
+    # Calculate the average daily return
+    average_daily_return = daily_returns.mean()
+    return daily_returns, average_daily_return
+
+
+# Calculate daily returns and average daily return
+daily_returns, average_daily_return = calculate_daily_returns(df)
+# Print the average daily return in % terms (x100)
+print(
+    f'The average daily return for BTC/USDT over the last {len(daily_returns)} days is {average_daily_return*100: .2f}%')
