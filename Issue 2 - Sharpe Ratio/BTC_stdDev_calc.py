@@ -167,36 +167,47 @@ print(f'Lower Bound: {lower_bound_95*100: .2f}%')
 print(f'Upper Bound: {upper_bound_95*100: .2f}%')
 
 
-# Step 2: Plot histogram of daily returns with adjusted parameters
-plt.hist(daily_returns*100, bins=50, alpha=0.5,
-         label='Daily Returns', histtype='bar', rwidth=0.8)
+# Plotting the histogram
+plt.hist(daily_returns*100, bins=50, alpha=0.7, density=True,
+         label='Daily Returns', histtype='bar', rwidth=0.8, color='skyblue')
 
-# Step 3: Calculate x values for the normal distribution curve
+# Calculating x and y values for the normal distribution curve
 x = np.linspace(min(daily_returns*100), max(daily_returns*100), 100)
-
-# Step 4: Calculate y values for the normal distribution curve
 y = norm.pdf(x, average_daily_return*100, std_dev*100)
 
-# Step 5: Plot the normal distribution curve
-plt.plot(x, y, 'r--', label='Normal Distribution')
+# Plotting the normal distribution curve
+plt.plot(x, y, 'r-', label='Normal Distribution', linewidth=2)
 
-# Step 6: Add vertical lines for the average and bounds
-plt.axvline(average_daily_return*100, color='g',
-            linestyle='--', label='Average Daily Return')
-plt.axvline(lower_bound_68*100, color='y',
-            linestyle='--', label='Lower Bound 68%')
-plt.axvline(upper_bound_68*100, color='y',
-            linestyle='--', label='Upper Bound 68%')
-plt.axvline(lower_bound_95*100, color='b',
-            linestyle='--', label='Lower Bound 95%')
-plt.axvline(upper_bound_95*100, color='b',
-            linestyle='--', label='Upper Bound 95%')
+# Adding vertical lines for the average and bounds
+plt.axvline(average_daily_return*100, color='green',
+            linestyle='--', linewidth=2, label='Average Daily Return')
+plt.axvline(lower_bound_68*100, color='orange', linestyle='--',
+            linewidth=2, label='Lower Bound 68%')
+plt.axvline(upper_bound_68*100, color='orange', linestyle='--',
+            linewidth=2, label='Upper Bound 68%')
+plt.axvline(lower_bound_95*100, color='red', linestyle='--',
+            linewidth=2, label='Lower Bound 95%')
+plt.axvline(upper_bound_95*100, color='red', linestyle='--',
+            linewidth=2, label='Upper Bound 95%')
 
-# Step 7: Customize the plot
-plt.xlabel('Daily Returns (%)')
-plt.ylabel('Probability Density')
-plt.title('Histogram of BTC/USDT Daily Returns with Normal Distribution')
+# Annotating the vertical lines with their literal values, adjusted to plot lower on the y-axis
+plt.text(average_daily_return*100, plt.ylim()
+         [1]*0.45, f'{average_daily_return*100:.2f}%', ha='right')
+plt.text(lower_bound_68*100, plt.ylim()
+         [1]*0.40, f'{lower_bound_68*100:.2f}%', ha='right')
+plt.text(upper_bound_68*100, plt.ylim()
+         [1]*0.40, f'{upper_bound_68*100:.2f}%', ha='left')
+plt.text(lower_bound_95*100, plt.ylim()
+         [1]*0.45, f'{lower_bound_95*100:.2f}%', ha='right')
+plt.text(upper_bound_95*100, plt.ylim()
+         [1]*0.45, f'{upper_bound_95*100:.2f}%', ha='left')
+
+# Customizing the plot with enhanced labels, title, and grid
+plt.xlabel('Daily Returns (%)', fontsize=12)
+plt.ylabel('Probability Density', fontsize=12)
+plt.title('Daily BTC/USDT Returns stdDev +1, +2', fontsize=14)
 plt.legend()
+plt.grid(True, which='both', linestyle='--', linewidth=0.5)
 
-# Save the figure
-plt.savefig('figure.png')
+# Saving the figure with improved styling
+plt.savefig('daily_btc_stdDev.png')
