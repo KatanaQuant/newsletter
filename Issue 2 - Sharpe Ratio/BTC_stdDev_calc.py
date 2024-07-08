@@ -1,4 +1,4 @@
-from scipy.stats import norm
+from scipy.stats import norm, skewnorm, skew
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -215,3 +215,39 @@ plt.tick_params(colors='#100d16')
 
 # Saving the figure with improved styling
 plt.savefig('daily_btc_stdDev.png')
+
+#####
+
+# Calculate the skewness of daily returns
+skewness_value = skew(daily_returns)
+
+plt.figure(facecolor='#f7e9e1')
+
+# Plotting the histogram of daily returns with branding color
+plt.hist(daily_returns*100, bins=50, alpha=0.7, density=True,
+         label='Daily Returns', color='#413b3c')
+
+# Calculating x values for the distribution curves
+x = np.linspace(min(daily_returns*100), max(daily_returns*100), 100)
+
+# Normal distribution curve with branding color
+y_norm = norm.pdf(x, average_daily_return*100, std_dev*100)
+plt.plot(x, y_norm, color='#de4d39', label='Normal Distribution', linewidth=2)
+
+# Skew-normal distribution curve with a custom color that fits the branding
+a = skewness_value  # Skewness parameter for skewnorm function
+y_skew = skewnorm.pdf(x, a, loc=average_daily_return*100, scale=std_dev*100)
+plt.plot(x, y_skew, color='blue', label='Skew-Normal Distribution',
+         linestyle='--', linewidth=2)
+
+# Customizing the plot with enhanced labels, title, and grid to match branding
+plt.xlabel('Daily Returns (%)', fontsize=12, color='#100d16')
+plt.ylabel('Probability Density', fontsize=12, color='#100d16')
+plt.title('Daily BTC/USDT Returns with Skewness', fontsize=14, color='#100d16')
+plt.legend()
+
+plt.grid(True, which='both', linestyle='--', linewidth=0.5, color='#100d16')
+plt.tick_params(colors='#100d16')
+
+# Saving the figure with improved styling
+plt.savefig('skew.png')
