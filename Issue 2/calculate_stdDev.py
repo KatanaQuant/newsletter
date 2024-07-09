@@ -27,11 +27,15 @@ std_dev = np.std(daily_returns)
 print(f'stdDev: {std_dev}')
 print(f'stdDev%: {std_dev*100: .2f}%')
 print('')
-
+# stdDev: 0.021213963635739217
+# stdDev%:  2.12%
 
 average_daily_return = daily_returns.mean()
-print(f'Avg daily return {average_daily_return*100: .2f}%')
+print(f'Avg daily return {average_daily_return}')
+print(f'Avg daily return% {average_daily_return*100: .2f}%')
 print('')
+# Avg daily return -0.006210788542243306
+# Avg daily return -0.62%
 
 
 lower_bound_68 = average_daily_return - std_dev
@@ -40,6 +44,9 @@ print(f'Within 1 stdDev (68% probability):')
 print(f'μ - σ: {lower_bound_68*100: .2f}%')
 print(f'μ + σ: {upper_bound_68*100: .2f}%')
 print('')
+# Within 1 stdDev (68% probability):
+# μ - σ: -2.74%
+# μ + σ:  1.50%
 
 lower_bound_95 = average_daily_return - std_dev * 2
 upper_bound_95 = average_daily_return + std_dev * 2
@@ -47,6 +54,9 @@ print(f'Within 1 stdDev (68% probability):')
 print(f'μ - 2σ: {lower_bound_95*100: .2f}%')
 print(f'μ + 2σ: {upper_bound_95*100: .2f}%')
 print('')
+# Within 1 stdDev (68% probability):
+# μ - 2σ: -4.86%
+# μ + 2σ:  3.62%
 
 
 plt.figure(facecolor='#f7e9e1')
@@ -98,3 +108,24 @@ plt.tick_params(colors='#100d16')
 
 # Saving the figure with improved styling
 plt.savefig('return_distribution.png')
+
+
+annual_rfr = 0.02
+trading_days_in_a_year = 365  # or 252 for stocks
+daily_rfr = annual_rfr / trading_days_in_a_year
+# daily_rfr_cmp = (1 + annual_rfr) ** (1/365) - 1
+# print(f'Daily RFR CMP: {daily_rfr_cmp}')
+
+excess_return = average_daily_return - daily_rfr
+
+print(f'Daily RFR: {daily_rfr}')
+print(f'Average Daily Return: {average_daily_return}')
+print(f'Average Daily Return%: {average_daily_return*100:.2f}')
+print(f'Excess Return: {excess_return}')
+print(f'Excess Return%: {excess_return*100:.2f}')
+print('')
+# Daily RFR: 5.479452054794521e-05
+# Average Daily Return: -0.006210788542243306
+# Average Daily Return%: -0.62
+# Excess Return: -0.006265583062791251
+# Excess Return%: -0.63
