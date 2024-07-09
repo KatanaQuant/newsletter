@@ -138,3 +138,45 @@ annualised_sharpe_ratio = sharpe_ratio * np.sqrt(trading_days_in_a_year)
 print(f'Annualised Sharpe Ratio: {annualised_sharpe_ratio}')
 print('')
 # Annualised Sharpe Ratio: -5.642688862529739
+
+
+report_template = """
+Backtest Report
+===============
+
+Ticker: {ticker}
+Timeframe: {timeframe}
+Strategy Name: {strategy_name}
+
+Standard Deviation (stdDev): {std_dev:.4f} ({std_dev_pct:.2f}%)
+Average Daily Return: {avg_daily_return:.4f} ({avg_daily_return_pct:.2f}%)
+
+Probability Bounds:
+- Within 1 stdDev (68%% probability): {lb_68:.2f}%% to {ub_68:.2f}%%
+- Within 2 stdDevs (95%% probability): {lb_95:.2f}%% to {ub_95:.2f}%%
+
+Risk-Free Rate (Daily): {daily_rfr:.8f}
+Excess Return: {excess_return:.4f} ({excess_return_pct:.2f}%)
+
+Sharpe Ratio: {sharpe_ratio:.4f}
+Annualised Sharpe Ratio: {annualised_sharpe_ratio:.4f}
+"""
+
+print(report_template.format(
+    ticker="BTCUSDT",
+    timeframe="1d",
+    strategy_name="Long Only Spot 1 Unit",
+    std_dev=std_dev,
+    std_dev_pct=std_dev*100,
+    avg_daily_return=average_daily_return,
+    avg_daily_return_pct=average_daily_return*100,
+    lb_68=lower_bound_68*100,
+    ub_68=upper_bound_68*100,
+    lb_95=lower_bound_95*100,
+    ub_95=upper_bound_95*100,
+    daily_rfr=daily_rfr,
+    excess_return=excess_return,
+    excess_return_pct=excess_return*100,
+    sharpe_ratio=sharpe_ratio,
+    annualised_sharpe_ratio=annualised_sharpe_ratio
+))
