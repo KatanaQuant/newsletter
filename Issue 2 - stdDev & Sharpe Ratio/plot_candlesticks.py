@@ -17,5 +17,4 @@ mpf.plot(df,
          style=s,
          volume=True,
          title=dict(title='BTC/USDT Last 25 Days', color='#100d16'),
-         mav=(3, 6, 9),
          savefig=dict(fname='btcusdt_klines.png', facecolor='#f7e9e1'))
