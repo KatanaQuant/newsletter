@@ -18,7 +18,7 @@ def calculate_daily_returns(df):
     return df['daily_return'].dropna()
 
 
-filepath = 'stdDev.xlsx'
+filepath = 'stdDev_and_SR.xlsx'
 df = read_ohlcv_from_csv(filepath)
 
 daily_returns = calculate_daily_returns(df)

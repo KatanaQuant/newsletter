@@ -1,4 +1,0 @@
-ccxt
-cryptocompare
-pandas
-numpy
