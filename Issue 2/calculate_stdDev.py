@@ -24,3 +24,7 @@ std_dev = np.std(daily_returns)
 
 print(f'stdDev: {std_dev}')
 print(f'stdDev%: {std_dev*100: .2f}%')
+print('')
+
+average_daily_return = daily_returns.mean()
+print(f'Avg daily return {average_daily_return*100: .2f}%')
