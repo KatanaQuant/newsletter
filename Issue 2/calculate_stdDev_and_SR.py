@@ -129,3 +129,12 @@ print('')
 # Average Daily Return%: -0.62
 # Excess Return: -0.006265583062791251
 # Excess Return%: -0.63
+
+sharpe_ratio = excess_return / std_dev
+print(f'Sharpe Ratio: {sharpe_ratio}')
+# Sharpe Ratio: -0.29535183383814273
+
+annualised_sharpe_ratio = sharpe_ratio * np.sqrt(trading_days_in_a_year)
+print(f'Annualised Sharpe Ratio: {annualised_sharpe_ratio}')
+print('')
+# Annualised Sharpe Ratio: -5.642688862529739
