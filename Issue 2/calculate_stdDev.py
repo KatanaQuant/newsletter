@@ -26,5 +26,22 @@ print(f'stdDev: {std_dev}')
 print(f'stdDev%: {std_dev*100: .2f}%')
 print('')
 
+
 average_daily_return = daily_returns.mean()
 print(f'Avg daily return {average_daily_return*100: .2f}%')
+print('')
+
+
+lower_bound = average_daily_return - std_dev
+upper_bound = average_daily_return + std_dev
+print(f'Within 1 stdDev (68% probability):')
+print(f'μ - σ: {lower_bound*100: .2f}%')
+print(f'μ + σ: {upper_bound*100: .2f}%')
+print('')
+
+lower_bound_2 = average_daily_return - std_dev * 2
+upper_bound_2 = average_daily_return + std_dev * 2
+print(f'Within 1 stdDev (68% probability):')
+print(f'μ - 2σ: {lower_bound_2*100: .2f}%')
+print(f'μ + 2σ: {upper_bound_2*100: .2f}%')
+print('')
