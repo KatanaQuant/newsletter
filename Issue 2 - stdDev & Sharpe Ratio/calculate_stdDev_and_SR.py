@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm
+from scipy.stats import norm, skewnorm, skew
 
 
 def read_ohlcv_from_csv(filepath):
@@ -106,9 +106,45 @@ plt.grid(True, which='both', linestyle='--', linewidth=0.5, color='#100d16')
 
 plt.tick_params(colors='#100d16')
 
-# Saving the figure with improved styling
 plt.savefig('return_distribution.png')
 
+
+# Calculate the skewness of daily returns
+skewness_value = skew(daily_returns)
+
+plt.figure(facecolor='#f7e9e1')
+
+# Plotting the histogram of daily returns
+plt.hist(daily_returns*100, bins=50, alpha=0.7, density=True,
+         label='Daily Returns', color='#413b3c')
+
+# Calculating x values for the distribution curves
+x = np.linspace(min(daily_returns*100), max(daily_returns*100), 100)
+
+# Normal distribution curve
+y_norm = norm.pdf(x, average_daily_return*100, std_dev*100)
+plt.plot(x, y_norm, color='#de4d39', label='Normal Distribution', linewidth=2)
+
+# Skew-normal distribution curve
+a = skewness_value
+y_skew = skewnorm.pdf(x, a, loc=average_daily_return*100, scale=std_dev*100)
+plt.plot(x, y_skew, color='blue', label='Skew-Normal Distribution',
+         linestyle='--', linewidth=2)
+
+plt.xlabel('Daily Returns (%)', fontsize=12, color='#100d16')
+plt.ylabel('Probability Density', fontsize=12, color='#100d16')
+plt.title('Daily BTC/USDT Returns with Skewness', fontsize=14, color='#100d16')
+plt.legend()
+
+plt.grid(True, which='both', linestyle='--', linewidth=0.5, color='#100d16')
+plt.tick_params(colors='#100d16')
+
+# Saving the figure with improved styling
+plt.savefig('skew.png')
+
+
+print(f'Skewness: {skewness_value}')
+print('')
 
 annual_rfr = 0.02
 trading_days_in_a_year = 365  # or 252 for stocks
@@ -155,6 +191,8 @@ Probability Bounds:
 - Within 1 stdDev (68%% probability): {lb_68:.2f}%% to {ub_68:.2f}%%
 - Within 2 stdDevs (95%% probability): {lb_95:.2f}%% to {ub_95:.2f}%%
 
+Skew: {skew:.4f}
+
 Risk-Free Rate (Daily): {daily_rfr:.8f}
 Excess Return: {excess_return:.4f} ({excess_return_pct:.2f}%)
 
@@ -174,6 +212,7 @@ print(report_template.format(
     ub_68=upper_bound_68*100,
     lb_95=lower_bound_95*100,
     ub_95=upper_bound_95*100,
+    skew=skewness_value,
     daily_rfr=daily_rfr,
     excess_return=excess_return,
     excess_return_pct=excess_return*100,
