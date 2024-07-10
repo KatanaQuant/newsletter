@@ -219,3 +219,18 @@ print(report_template.format(
     sharpe_ratio=sharpe_ratio,
     annualised_sharpe_ratio=annualised_sharpe_ratio
 ))
+
+# Calculate Cumulative Returns for equity curve
+cumulative_returns = (1 + daily_returns).cumprod()
+
+plt.figure(figsize=(10, 6), facecolor='#f7e9e1')
+plt.plot(cumulative_returns.index, cumulative_returns,
+         label='Equity Curve', color='#413b3c', linewidth=2)
+plt.xlabel('Date', fontsize=12, color='#100d16')
+plt.ylabel('Cumulative Returns', fontsize=12, color='#100d16')
+plt.title('Equity Curve for BTC/USDT', fontsize=14, color='#100d16')
+plt.legend()
+plt.grid(True, which='both', linestyle='--', linewidth=0.5, color='#100d16')
+plt.tick_params(colors='#100d16')
+
+plt.savefig('equity_curve.png')
