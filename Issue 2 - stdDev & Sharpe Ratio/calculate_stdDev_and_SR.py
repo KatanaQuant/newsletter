@@ -13,18 +13,26 @@ def read_ohlcv_from_csv(filepath):
     return df
 
 
-def calculate_daily_returns(df):
-    df['daily_return'] = df['close'].pct_change()
-    return df['daily_return'].dropna()
-
-
 filepath = 'stdDev_and_SR.xlsx'
 df = read_ohlcv_from_csv(filepath)
-
 df.sort_values(by='timestamp', inplace=True)
 
-daily_returns = calculate_daily_returns(df)
+daily_returns = df['close'].pct_change().dropna()
 std_dev = np.std(daily_returns)
+
+
+# Plotting the return series as histogram
+plt.figure(facecolor='#f7e9e1')
+time_indices = range(len(daily_returns))
+plt.bar(time_indices, daily_returns, color=[
+        '#413b3c' if x > 0 else '#de4d39' for x in daily_returns])
+plt.axhline(0, color='gray', linestyle='--')
+
+plt.xlabel('Time')
+plt.ylabel('Daily Returns')
+plt.title('Daily Returns Over Time')
+plt.savefig('return_series_histogram.png')
+
 
 print(f'stdDev: {std_dev}')
 print(f'stdDev%: {std_dev*100: .2f}%')
@@ -47,8 +55,8 @@ print(f'μ - σ: {lower_bound_68*100: .2f}%')
 print(f'μ + σ: {upper_bound_68*100: .2f}%')
 print('')
 # Within 1 stdDev (68% probability):
-# μ - σ: -2.74%
-# μ + σ:  1.50%
+# μ - σ: -2.79%
+# μ + σ:  1.54%
 
 lower_bound_95 = average_daily_return - std_dev * 2
 upper_bound_95 = average_daily_return + std_dev * 2
@@ -147,8 +155,9 @@ plt.savefig('skew.png')
 
 print(f'Skewness: {skewness_value}')
 print('')
+# Skewness: -0.3430500436060992
 
-annual_rfr = 0.02
+annual_rfr = 0.00
 trading_days_in_a_year = 365  # or 252 for stocks
 daily_rfr = annual_rfr / trading_days_in_a_year
 # daily_rfr_cmp = (1 + annual_rfr) ** (1/365) - 1
