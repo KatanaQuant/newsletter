@@ -18,7 +18,13 @@ df = read_ohlcv_from_csv(filepath)
 df.sort_values(by='timestamp', inplace=True)
 
 daily_returns = df['close'].pct_change().dropna()
-std_dev = np.std(daily_returns)
+std_dev = daily_returns.std()
+
+print(f'stdDev: {std_dev}')
+print(f'stdDev%: {std_dev*100: .2f}%')
+print('')
+# stdDev: 0.021213963635739217
+# stdDev%:  2.12%
 
 
 # Plotting the return series as histogram
@@ -33,12 +39,6 @@ plt.ylabel('Daily Returns')
 plt.title('Daily Returns Over Time')
 plt.savefig('return_series_histogram.png')
 
-
-print(f'stdDev: {std_dev}')
-print(f'stdDev%: {std_dev*100: .2f}%')
-print('')
-# stdDev: 0.021213963635739217
-# stdDev%:  2.12%
 
 average_daily_return = daily_returns.mean()
 print(f'Avg daily return {average_daily_return}')
@@ -60,13 +60,13 @@ print('')
 
 lower_bound_95 = average_daily_return - std_dev * 2
 upper_bound_95 = average_daily_return + std_dev * 2
-print(f'Within 1 stdDev (68% probability):')
+print(f'Within 2 stdDev (95% probability):')
 print(f'μ - 2σ: {lower_bound_95*100: .2f}%')
 print(f'μ + 2σ: {upper_bound_95*100: .2f}%')
 print('')
-# Within 1 stdDev (68% probability):
-# μ - 2σ: -4.86%
-# μ + 2σ:  3.62%
+# Within 2 stdDev (95% probability):
+# μ - 2σ: -4.95%
+# μ + 2σ:  3.71%
 
 
 plt.figure(facecolor='#f7e9e1')
