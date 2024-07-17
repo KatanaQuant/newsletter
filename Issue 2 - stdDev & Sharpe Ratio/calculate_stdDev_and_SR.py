@@ -69,6 +69,35 @@ print('')
 # μ + 2σ:  3.71%
 
 
+annual_rfr = 0.00
+trading_days_in_a_year = 365  # or 252 for stocks
+daily_rfr = annual_rfr / trading_days_in_a_year
+# daily_rfr_cmp = (1 + annual_rfr) ** (1/365) - 1
+# print(f'Daily RFR CMP: {daily_rfr_cmp}')
+
+excess_return = average_daily_return - daily_rfr
+
+print(f'Daily RFR: {daily_rfr}')
+print(f'Average Daily Return: {average_daily_return}')
+print(f'Average Daily Return%: {average_daily_return*100:.2f}')
+print(f'Excess Return: {excess_return}')
+print(f'Excess Return%: {excess_return*100:.2f}')
+print('')
+# Daily RFR: 5.479452054794521e-05
+# Average Daily Return: -0.006210788542243306
+# Average Daily Return%: -0.62
+# Excess Return: -0.006265583062791251
+# Excess Return%: -0.63
+
+sharpe_ratio = excess_return / std_dev
+print(f'Sharpe Ratio: {sharpe_ratio}')
+# Sharpe Ratio: -0.29535183383814273
+
+annualised_sharpe_ratio = sharpe_ratio * np.sqrt(trading_days_in_a_year)
+print(f'Annualised Sharpe Ratio: {annualised_sharpe_ratio}')
+print('')
+# Annualised Sharpe Ratio: -5.642688862529739
+
 plt.figure(facecolor='#f7e9e1')
 
 # Plotting the daily returns
@@ -157,34 +186,31 @@ print(f'Skewness: {skewness_value}')
 print('')
 # Skewness: -0.3430500436060992
 
-annual_rfr = 0.00
-trading_days_in_a_year = 365  # or 252 for stocks
-daily_rfr = annual_rfr / trading_days_in_a_year
-# daily_rfr_cmp = (1 + annual_rfr) ** (1/365) - 1
-# print(f'Daily RFR CMP: {daily_rfr_cmp}')
 
-excess_return = average_daily_return - daily_rfr
+normalized_returns = daily_returns - daily_returns.mean()
 
-print(f'Daily RFR: {daily_rfr}')
-print(f'Average Daily Return: {average_daily_return}')
-print(f'Average Daily Return%: {average_daily_return*100:.2f}')
-print(f'Excess Return: {excess_return}')
-print(f'Excess Return%: {excess_return*100:.2f}')
+percentile1 = np.percentile(normalized_returns, 1)
+percentile30 = np.percentile(normalized_returns, 30)
+left_tail_ratio = percentile1 / percentile30
+print(f'Left tail ratio: {left_tail_ratio}')
 print('')
-# Daily RFR: 5.479452054794521e-05
-# Average Daily Return: -0.006210788542243306
-# Average Daily Return%: -0.62
-# Excess Return: -0.006265583062791251
-# Excess Return%: -0.63
+# Left tail ratio: 5.325151810198803
 
-sharpe_ratio = excess_return / std_dev
-print(f'Sharpe Ratio: {sharpe_ratio}')
-# Sharpe Ratio: -0.29535183383814273
-
-annualised_sharpe_ratio = sharpe_ratio * np.sqrt(trading_days_in_a_year)
-print(f'Annualised Sharpe Ratio: {annualised_sharpe_ratio}')
+percentile70 = np.percentile(normalized_returns, 70)
+percentile99 = np.percentile(normalized_returns, 99)
+right_tail_ratio = percentile99 / percentile70
+print(f'Right tail ratio: {right_tail_ratio}')
 print('')
-# Annualised Sharpe Ratio: -5.642688862529739
+# Right tail ratio: 3.98234197984283
+
+symmetrical_ratio = 4.43
+relative_left_ratio = left_tail_ratio / symmetrical_ratio
+relative_right_ratio = right_tail_ratio / symmetrical_ratio
+print(f'Relative left ratio: {relative_left_ratio}')
+print(f'Relative right ratio: {relative_right_ratio}')
+print('')
+# Relative left ratio: 1.2020658713767052
+# Relative right ratio: 0.8989485281812257
 
 
 report_template = """
