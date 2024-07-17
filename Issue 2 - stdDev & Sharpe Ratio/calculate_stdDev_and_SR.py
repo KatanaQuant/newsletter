@@ -1,3 +1,4 @@
+from tabulate import tabulate
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -69,30 +70,26 @@ print('')
 # μ + 2σ:  3.71%
 
 
-annual_rfr = 0.00
-trading_days_in_a_year = 365  # or 252 for stocks
-daily_rfr = annual_rfr / trading_days_in_a_year
-# daily_rfr_cmp = (1 + annual_rfr) ** (1/365) - 1
-# print(f'Daily RFR CMP: {daily_rfr_cmp}')
+rfr = 0
+excess_return = average_daily_return - rfr
 
-excess_return = average_daily_return - daily_rfr
-
-print(f'Daily RFR: {daily_rfr}')
+print(f'Daily RFR: {rfr}')
 print(f'Average Daily Return: {average_daily_return}')
 print(f'Average Daily Return%: {average_daily_return*100:.2f}')
 print(f'Excess Return: {excess_return}')
 print(f'Excess Return%: {excess_return*100:.2f}')
 print('')
-# Daily RFR: 5.479452054794521e-05
+# Daily RFR: 0
 # Average Daily Return: -0.006210788542243306
 # Average Daily Return%: -0.62
-# Excess Return: -0.006265583062791251
-# Excess Return%: -0.63
+# Excess Return: -0.006210788542243306
+# Excess Return%: -0.62
 
 sharpe_ratio = excess_return / std_dev
 print(f'Sharpe Ratio: {sharpe_ratio}')
 # Sharpe Ratio: -0.29535183383814273
 
+trading_days_in_a_year = 365  # or 252 for stocks
 annualised_sharpe_ratio = sharpe_ratio * np.sqrt(trading_days_in_a_year)
 print(f'Annualised Sharpe Ratio: {annualised_sharpe_ratio}')
 print('')
@@ -221,15 +218,6 @@ Ticker: {ticker}
 Timeframe: {timeframe}
 Strategy Name: {strategy_name}
 
-Standard Deviation (stdDev): {std_dev:.4f} ({std_dev_pct:.2f}%)
-Average Daily Return: {avg_daily_return:.4f} ({avg_daily_return_pct:.2f}%)
-
-Probability Bounds:
-- Within 1 stdDev (68%% probability): {lb_68:.2f}%% to {ub_68:.2f}%%
-- Within 2 stdDevs (95%% probability): {lb_95:.2f}%% to {ub_95:.2f}%%
-
-Risk-Free Rate (Daily): {daily_rfr:.8f}
-Excess Return: {excess_return:.4f} ({excess_return_pct:.2f}%)
 Sharpe Ratio: {sharpe_ratio:.4f}
 Annualised Sharpe Ratio: {annualised_sharpe_ratio:.4f}
 
@@ -242,20 +230,25 @@ print(report_template.format(
     ticker="BTCUSDT",
     timeframe="1d",
     strategy_name="Long Only Spot 1 Unit",
-    std_dev=std_dev,
-    std_dev_pct=std_dev*100,
-    avg_daily_return=average_daily_return,
-    avg_daily_return_pct=average_daily_return*100,
-    lb_68=lower_bound_68*100,
-    ub_68=upper_bound_68*100,
-    lb_95=lower_bound_95*100,
-    ub_95=upper_bound_95*100,
-    daily_rfr=daily_rfr,
-    excess_return=excess_return,
-    excess_return_pct=excess_return*100,
     sharpe_ratio=sharpe_ratio,
     annualised_sharpe_ratio=annualised_sharpe_ratio,
     skew=skewness_value,
     relative_left_ratio=relative_left_ratio,
     relative_right_ratio=relative_right_ratio
 ))
+
+
+# Prepare data for the table
+table_data = [
+    ["Ticker", "BTCUSDT"],
+    ["Timeframe", "1d"],
+    ["Strategy Name", "Long Only Spot 1 Unit"],
+    ["Sharpe Ratio", f"{sharpe_ratio:.4f}"],
+    ["Annualised Sharpe Ratio", f"{annualised_sharpe_ratio:.4f}"],
+    ["Skew", f"{skewness_value:.4f}"],
+    ["Left Tail", f"{relative_left_ratio:.4f}"],
+    ["Right Tail", f"{relative_right_ratio:.4f}"]
+]
+
+# Print the table
+print(tabulate(table_data, headers=["Metric", "Value"], tablefmt="grid"))
