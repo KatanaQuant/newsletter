@@ -228,13 +228,14 @@ Probability Bounds:
 - Within 1 stdDev (68%% probability): {lb_68:.2f}%% to {ub_68:.2f}%%
 - Within 2 stdDevs (95%% probability): {lb_95:.2f}%% to {ub_95:.2f}%%
 
-Skew: {skew:.4f}
-
 Risk-Free Rate (Daily): {daily_rfr:.8f}
 Excess Return: {excess_return:.4f} ({excess_return_pct:.2f}%)
-
 Sharpe Ratio: {sharpe_ratio:.4f}
 Annualised Sharpe Ratio: {annualised_sharpe_ratio:.4f}
+
+Skew: {skew:.4f}
+Left Tail: {relative_left_ratio:.4f}
+Right Tail: {relative_right_ratio:.4f}
 """
 
 print(report_template.format(
@@ -249,10 +250,12 @@ print(report_template.format(
     ub_68=upper_bound_68*100,
     lb_95=lower_bound_95*100,
     ub_95=upper_bound_95*100,
-    skew=skewness_value,
     daily_rfr=daily_rfr,
     excess_return=excess_return,
     excess_return_pct=excess_return*100,
     sharpe_ratio=sharpe_ratio,
-    annualised_sharpe_ratio=annualised_sharpe_ratio
+    annualised_sharpe_ratio=annualised_sharpe_ratio,
+    skew=skewness_value,
+    relative_left_ratio=relative_left_ratio,
+    relative_right_ratio=relative_right_ratio
 ))
