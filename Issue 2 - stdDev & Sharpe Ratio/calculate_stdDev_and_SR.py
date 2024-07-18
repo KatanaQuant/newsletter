@@ -19,14 +19,8 @@ df = read_ohlcv_from_csv(filepath)
 df.sort_values(by='timestamp', inplace=True)
 
 daily_returns = df['close'].pct_change().dropna()
-std_dev = daily_returns.std()
 
-print(f'stdDev: {std_dev}')
-print(f'stdDev%: {std_dev*100: .2f}%')
-print('')
-# stdDev: 0.021213963635739217
-# stdDev%:  2.12%
-
+# - - - -
 
 # Plotting the return series as histogram
 plt.figure(facecolor='#f7e9e1')
@@ -40,7 +34,19 @@ plt.ylabel('Daily Returns')
 plt.title('Daily Returns Over Time')
 plt.savefig('return_series_histogram.png')
 
+# - - - -
 
+# Calculating the standard deviation of daily returns
+std_dev = daily_returns.std()
+print(f'stdDev: {std_dev}')
+print(f'stdDev%: {std_dev*100: .2f}%')
+print('')
+# stdDev: 0.021651410970632726
+# stdDev%:  2.17%
+
+# - - - -
+
+# Calculating the average daily return
 average_daily_return = daily_returns.mean()
 print(f'Avg daily return {average_daily_return}')
 print(f'Avg daily return% {average_daily_return*100: .2f}%')
@@ -48,7 +54,9 @@ print('')
 # Avg daily return -0.006210788542243306
 # Avg daily return -0.62%
 
+# - - - -
 
+# Calculating the bounds for 68% probability
 lower_bound_68 = average_daily_return - std_dev
 upper_bound_68 = average_daily_return + std_dev
 print(f'Within 1 stdDev (68% probability):')
@@ -59,6 +67,9 @@ print('')
 # μ - σ: -2.79%
 # μ + σ:  1.54%
 
+# - - - -
+
+# Calculating the bounds for 95% probability
 lower_bound_95 = average_daily_return - std_dev * 2
 upper_bound_95 = average_daily_return + std_dev * 2
 print(f'Within 2 stdDev (95% probability):')
@@ -69,35 +80,10 @@ print('')
 # μ - 2σ: -4.95%
 # μ + 2σ:  3.71%
 
-
-rfr = 0
-excess_return = average_daily_return - rfr
-
-print(f'Daily RFR: {rfr}')
-print(f'Average Daily Return: {average_daily_return}')
-print(f'Average Daily Return%: {average_daily_return*100:.2f}')
-print(f'Excess Return: {excess_return}')
-print(f'Excess Return%: {excess_return*100:.2f}')
-print('')
-# Daily RFR: 0
-# Average Daily Return: -0.006210788542243306
-# Average Daily Return%: -0.62
-# Excess Return: -0.006210788542243306
-# Excess Return%: -0.62
-
-sharpe_ratio = excess_return / std_dev
-print(f'Sharpe Ratio: {sharpe_ratio}')
-# Sharpe Ratio: -0.29535183383814273
-
-trading_days_in_a_year = 365  # or 252 for stocks
-annualised_sharpe_ratio = sharpe_ratio * np.sqrt(trading_days_in_a_year)
-print(f'Annualised Sharpe Ratio: {annualised_sharpe_ratio}')
-print('')
-# Annualised Sharpe Ratio: -5.642688862529739
-
-plt.figure(facecolor='#f7e9e1')
+# - - - -
 
 # Plotting the daily returns
+plt.figure(facecolor='#f7e9e1')
 plt.hist(daily_returns*100, bins=50, alpha=0.7, density=True,
          label='Daily Returns', histtype='bar', rwidth=0.8, color='#413b3c')
 
@@ -139,17 +125,51 @@ plt.title('Daily BTC/USDT Returns stdDev +1, +2', fontsize=14, color='#100d16')
 plt.legend()
 
 plt.grid(True, which='both', linestyle='--', linewidth=0.5, color='#100d16')
-
 plt.tick_params(colors='#100d16')
 
 plt.savefig('return_distribution.png')
 
+# - - - -
+
+# Calculating Excess returns
+rfr = 0
+excess_return = average_daily_return - rfr
+
+print(f'Daily RFR: {rfr}')
+print(f'Average Daily Return: {average_daily_return}')
+print(f'Average Daily Return%: {average_daily_return*100:.2f}')
+print(f'Excess Return: {excess_return}')
+print(f'Excess Return%: {excess_return*100:.2f}')
+print('')
+# Daily RFR: 0
+# Average Daily Return: -0.006210788542243306
+# Average Daily Return%: -0.62
+# Excess Return: -0.006210788542243306
+# Excess Return%: -0.62
+
+# - - - -
+
+# Calculating the Sharpe Ratio
+sharpe_ratio = excess_return / std_dev
+print(f'Sharpe Ratio: {sharpe_ratio}')
+# Sharpe Ratio: -0.2868537551971748
+
+# - - - -
+
+# Annualising the Sharpe Ratio
+trading_days_in_a_year = 365  # or 252 for stocks
+annualised_sharpe_ratio = sharpe_ratio * np.sqrt(trading_days_in_a_year)
+print(f'Annualised Sharpe Ratio: {annualised_sharpe_ratio}')
+print('')
+# Annualised Sharpe Ratio: -5.480333298058892
+
+# - - - -
 
 # Calculate the skewness of daily returns
 skewness_value = skew(daily_returns)
 
+# Plotting the daily returns with skewness
 plt.figure(facecolor='#f7e9e1')
-
 # Plotting the histogram of daily returns
 plt.hist(daily_returns*100, bins=50, alpha=0.7, density=True,
          label='Daily Returns', color='#413b3c')
@@ -183,7 +203,9 @@ print(f'Skewness: {skewness_value}')
 print('')
 # Skewness: -0.3430500436060992
 
+# - - - -
 
+# Calculate the left tail ratio
 normalized_returns = daily_returns - daily_returns.mean()
 
 percentile1 = np.percentile(normalized_returns, 1)
@@ -193,6 +215,9 @@ print(f'Left tail ratio: {left_tail_ratio}')
 print('')
 # Left tail ratio: 5.325151810198803
 
+# - - - -
+
+# Calculate the right tail ratio
 percentile70 = np.percentile(normalized_returns, 70)
 percentile99 = np.percentile(normalized_returns, 99)
 right_tail_ratio = percentile99 / percentile70
@@ -200,6 +225,9 @@ print(f'Right tail ratio: {right_tail_ratio}')
 print('')
 # Right tail ratio: 3.98234197984283
 
+# - - - -
+
+# Calculate the relative left and right tail ratios
 symmetrical_ratio = 4.43
 relative_left_ratio = left_tail_ratio / symmetrical_ratio
 relative_right_ratio = right_tail_ratio / symmetrical_ratio
@@ -209,7 +237,9 @@ print('')
 # Relative left ratio: 1.2020658713767052
 # Relative right ratio: 0.8989485281812257
 
+# - - - -
 
+# Print the backtest report
 report_template = """
 Backtest Report
 ===============
