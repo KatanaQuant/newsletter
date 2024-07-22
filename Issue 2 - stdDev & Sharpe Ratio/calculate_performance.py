@@ -2,21 +2,24 @@ from tabulate import tabulate
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm, skewnorm, skew
+from scipy.stats import norm, skewnorm
 
 
 def read_ohlcv_from_csv(filepath):
     df = pd.read_excel(filepath)
 
-    # Convert timestamp to datetime if it's not already
     if not pd.api.types.is_datetime64_any_dtype(df['timestamp']):
         df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+    df.set_index('timestamp', inplace=True)
+    df.sort_values(by='timestamp', inplace=True)
+
     return df
 
 
 filepath = 'stdDev_and_SR.xlsx'
 df = read_ohlcv_from_csv(filepath)
-df.sort_values(by='timestamp', inplace=True)
+
 
 daily_returns = df['close'].pct_change().dropna()
 
@@ -132,18 +135,11 @@ plt.savefig('return_distribution.png')
 # - - - -
 
 # Calculating Excess returns
-rfr = 0
-excess_return = average_daily_return - rfr
+excess_return = average_daily_return
 
-print(f'Daily RFR: {rfr}')
-print(f'Average Daily Return: {average_daily_return}')
-print(f'Average Daily Return%: {average_daily_return*100:.2f}')
 print(f'Excess Return: {excess_return}')
 print(f'Excess Return%: {excess_return*100:.2f}')
 print('')
-# Daily RFR: 0
-# Average Daily Return: -0.006210788542243306
-# Average Daily Return%: -0.62
 # Excess Return: -0.006210788542243306
 # Excess Return%: -0.62
 
@@ -166,7 +162,7 @@ print('')
 # - - - -
 
 # Calculate the skewness of daily returns
-skewness_value = skew(daily_returns)
+skewness_value = daily_returns.skew()
 
 # Plotting the daily returns with skewness
 plt.figure(facecolor='#f7e9e1')
@@ -201,7 +197,7 @@ plt.savefig('skew.png')
 
 print(f'Skewness: {skewness_value}')
 print('')
-# Skewness: -0.3430500436060992
+# Skewness: -0.3653467665541139
 
 # - - - -
 
