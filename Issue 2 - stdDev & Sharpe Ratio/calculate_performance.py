@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm, skewnorm
 
 
-def read_ohlcv_from_csv(filepath):
+def read_ohlcv_from_xlsx(filepath):
     df = pd.read_excel(filepath)
 
     if not pd.api.types.is_datetime64_any_dtype(df['timestamp']):
@@ -18,9 +18,7 @@ def read_ohlcv_from_csv(filepath):
 
 
 filepath = 'stdDev_and_SR.xlsx'
-df = read_ohlcv_from_csv(filepath)
-
-
+df = read_ohlcv_from_xlsx(filepath)
 daily_returns = df['close'].pct_change().dropna()
 
 # - - - -

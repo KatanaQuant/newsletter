@@ -49,7 +49,8 @@ def monte_carlo_simulation(initial_bankroll, amount_won, amount_lost, win_percen
     ev = calculate_ev(win_percent, amount_won, amount_lost)
     rr = calculate_risk_reward_ratio(amount_won, amount_lost)
 
-    info_text = f'EV: ${ev:.2f}, R:R: {rr:.2f}, Win Amount: ${amount_won}, Loss Amount: ${amount_lost}, Win%: {win_percent:.2f}'
+    info_text = f'EV: ${ev:.2f}, R:R: {rr:.2f}, Win Amount: ${
+        amount_won}, Loss Amount: ${amount_lost}, Win%: {win_percent:.2f}'
     plt.gcf().suptitle(info_text, fontsize=8)
 
     legend_elements = [mpatches.Patch(label=f'Initial Bankroll: {initial_bankroll}'),
