@@ -4,6 +4,9 @@ from metrics import calculate_std_dev
 from metrics import calculate_sharpe_ratio, annualise_sharpe_ratio
 from metrics import calculate_skewness
 from metrics import calculate_tail_ratios
+from plots import plot_return_series
+from plots import plot_return_distribution
+from plots import plot_skew
 
 CSV_FILE = 'btc-usd-max.csv'
 update_data(CSV_FILE)
@@ -11,6 +14,7 @@ update_data(CSV_FILE)
 
 df = read_ohlcv_from_csv(CSV_FILE)
 daily_returns = df['price'].pct_change().dropna()
+
 
 std_dev = calculate_std_dev(daily_returns)
 sharpe_ratio = calculate_sharpe_ratio(daily_returns)
@@ -20,6 +24,10 @@ skewness = calculate_skewness(daily_returns)
 
 relative_left_ratio, relative_right_ratio = calculate_tail_ratios(
     daily_returns)
+
+plot_return_series(daily_returns)
+plot_return_distribution(daily_returns)
+plot_skew(daily_returns)
 
 # Print the backtest report
 report_template = """

@@ -19,11 +19,11 @@ def read_ohlcv_from_xlsx(filepath):
 def read_ohlcv_from_csv(filepath):
     df = pd.read_csv(filepath)
 
-    if not pd.api.types.is_datetime64_any_dtype(df['snapped_at']):
-        df['snapped_at'] = pd.to_datetime(df['snapped_at'])
+    if not pd.api.types.is_datetime64_any_dtype(df['timestamp']):
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
 
-    df.set_index('snapped_at', inplace=True)
-    df.sort_values(by='snapped_at', inplace=True)
+    df.set_index('timestamp', inplace=True)
+    df.sort_values(by='timestamp', inplace=True)
 
     return df
 
@@ -53,14 +53,14 @@ def fetch_btcusdt_daily_data():
 
     # Convert the extracted data to a pandas DataFrame
     df = pd.DataFrame(
-        extracted_data, columns=['snapped_at', 'price', 'market_cap', 'total_volume'])
+        extracted_data, columns=['timestamp', 'price', 'market_cap', 'total_volume'])
 
     # Drop the latest row because it may not be a complete day
     df = df[:-1]
 
     # Convert timestamps to readable dates
-    df['snapped_at'] = pd.to_datetime(
-        df['snapped_at'], unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S UTC')
+    df['timestamp'] = pd.to_datetime(
+        df['timestamp'], unit='ms').dt.strftime('%Y-%m-%d %H:%M:%S UTC')
 
     return df
 
@@ -71,7 +71,7 @@ def save_data_to_csv(df, CSV_FILE):
 
 def load_existing_data(CSV_FILE):
     if os.path.exists(CSV_FILE):
-        return pd.read_csv(CSV_FILE, parse_dates=['snapped_at'])
+        return pd.read_csv(CSV_FILE, parse_dates=['timestamp'])
     return pd.DataFrame()
 
 
@@ -79,7 +79,7 @@ def update_data(CSV_FILE):
     existing_data = load_existing_data(CSV_FILE)
 
     if not existing_data.empty:
-        last_entry_date = existing_data['snapped_at'].max()
+        last_entry_date = existing_data['timestamp'].max()
         last_entry_date = pd.to_datetime(
             last_entry_date, utc=True)
         if last_entry_date >= datetime.now(tz=last_entry_date.tzinfo) - timedelta(days=1):
@@ -89,11 +89,11 @@ def update_data(CSV_FILE):
     new_data = fetch_btcusdt_daily_data()
     if not existing_data.empty:
         # Convert the timestamp column back to datetime for comparison
-        new_data['snapped_at'] = pd.to_datetime(
-            new_data['snapped_at'], utc=True)
+        new_data['timestamp'] = pd.to_datetime(
+            new_data['timestamp'], utc=True)
         combined_data = pd.concat(
-            [existing_data, new_data]).drop_duplicates(subset=['snapped_at'])
-        new_rows = combined_data[combined_data['snapped_at'] > last_entry_date]
+            [existing_data, new_data]).drop_duplicates(subset=['timestamp'])
+        new_rows = combined_data[combined_data['timestamp'] > last_entry_date]
     else:
         combined_data = new_data
         new_rows = combined_data
