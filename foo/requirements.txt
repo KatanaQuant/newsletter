@@ -1,3 +1,0 @@
-polygon-api-client
-python-dotenv
-yfinance
