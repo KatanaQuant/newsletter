@@ -119,14 +119,13 @@ def plot_skew(returns):
     plt.savefig('skew.png')
 
 
-def plot_equity_curve(returns):
+def plot_equity_curve(returns, tickername):
     cumulative_returns = (1 + returns).cumprod() - 1
     cumulative_returns = cumulative_returns.to_numpy()
 
-    # Plotting the equity curve
     plt.figure(facecolor='#f7e9e1')
     time_indices = range(len(cumulative_returns))
-    plt.plot(time_indices, cumulative_returns, color='#413b3c', linewidth=2)
+    plt.plot(time_indices, cumulative_returns, color='#de4d39', linewidth=2)
 
     plt.xlabel('Time')
     plt.ylabel('Cumulative Returns')
@@ -135,40 +134,10 @@ def plot_equity_curve(returns):
              linewidth=0.5, color='#100d16')
     plt.tick_params(colors='#100d16')
 
-    plt.savefig('equity_curve.png')
+    plt.savefig(f'equity_curve_{tickername}.png')
 
 
-def plot_buy_and_hold_vs_eq_curve(returns, prices):
-    cumulative_returns = (1 + returns).cumprod() - 1
-    cumulative_returns = cumulative_returns.to_numpy()
-
-    asset_cumulative_returns = (prices / prices.iloc[0]) - 1
-    asset_cumulative_returns = asset_cumulative_returns.to_numpy()
-
-    # Plotting the equity curve and BTC price cumulative returns
-    plt.figure(facecolor='#f7e9e1')
-    time_indices = range(len(cumulative_returns))
-
-    # Plot BTC cumulative returns
-    plt.plot(time_indices, asset_cumulative_returns[-len(cumulative_returns):],
-             color='#1f77b4', linewidth=2, label='BTC Price Cumulative Returns')
-
-    # Plot equity curve
-    plt.plot(time_indices, cumulative_returns, color='#ff7f0e',
-             linewidth=2, label='Equity Curve')
-
-    plt.xlabel('Time')
-    plt.ylabel('Cumulative Returns')
-    plt.title('Equity Curve and BTC Price Cumulative Returns Over Time')
-    plt.legend()
-    plt.grid(True, which='both', linestyle='--',
-             linewidth=0.5, color='#100d16')
-    plt.tick_params(colors='#100d16')
-
-    plt.savefig('buy_and_hold_vs_eq_curve.png')
-
-
-def plot_drawdown(returns):
+def plot_drawdown(returns, tickername):
     cumulative_returns = (1 + returns).cumprod() - 1
 
     drawdowns = calculate_drawdown(returns)

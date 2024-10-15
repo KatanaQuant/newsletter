@@ -78,7 +78,7 @@ print(tabulate(table_data, headers=["Metric", "Value"], tablefmt="grid"))
 # plot_return_distribution(daily_returns)
 # plot_skew(daily_returns)
 
-# plot_equity_curve(daily_returns)
+plot_equity_curve(daily_returns, ticker)
 # plot_drawdown(daily_returns)
 
 plot_equity_and_drawdown(daily_returns, ticker)
