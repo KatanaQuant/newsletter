@@ -1,33 +1,24 @@
 import numpy as np
 
-TRADING_DAYS_IN_A_YEAR = 256  # or 252 for stocks
+TRADING_DAYS_IN_A_YEAR = 256
+
+
+def calculate_cumulative_returns(returns):
+    return returns.cumsum()
+    # return (1 + returns).cumprod() - 1
 
 
 def calculate_drawdown(returns):
-    cumulative_returns = (1 + returns).cumprod() - 1
+    cumulative_returns = calculate_cumulative_returns(returns)
+    cumulative_max = cumulative_returns.cummax()
 
-    running_max = (1 + returns).cumprod().cummax()
-    drawdown_series = (cumulative_returns + 1) / running_max - 1
-    # avg_drawdown = drawdown.mean()
-    # max_drawdown = drawdown.min()
-
+    drawdown_series = cumulative_max - cumulative_returns
+    drawdown_series = drawdown_series / (1 + cumulative_max)
     return drawdown_series
 
 
-def calculate_drawdown_carver(returns):
-    cum_perc_return = returns.cumsum()
-    max_cum_perc_return = cum_perc_return.rolling(len(returns)+1,
-                                                  min_periods=1).max()
-    drawdown_series = max_cum_perc_return - cum_perc_return
-    # avg_drawdown = drawdown.mean()
-    # max_drawdown = drawdown.max()
-
-    return drawdown_series
-
-
-def calculate_average_annual_return(daily_returns):
-    daily_avg_returns = daily_returns.mean()
-    return daily_avg_returns * TRADING_DAYS_IN_A_YEAR
+def calculate_average_return(returns):
+    return returns.mean()
 
 
 def calculate_std_dev(returns):
@@ -39,9 +30,7 @@ def annualise_std_dev(std_dev):
 
 
 def calculate_sharpe_ratio(returns):
-    average_return = returns.mean()
-    excess_return = average_return
-
+    excess_return = calculate_average_return(returns)
     sharpe_ratio = excess_return / calculate_std_dev(returns)
     return sharpe_ratio
 
@@ -55,7 +44,7 @@ def calculate_skewness(returns):
 
 
 def calculate_tail_ratios(returns):
-    normalized_returns = returns - returns.mean()
+    normalized_returns = returns - calculate_average_return(returns)
 
     # Calculate the left tail ratio
     percentile1 = np.percentile(normalized_returns, 1)

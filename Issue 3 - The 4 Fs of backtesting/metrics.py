@@ -5,10 +5,12 @@ def calculate_std_dev(returns):
     return returns.std()
 
 
-def calculate_sharpe_ratio(returns):
-    average_return = returns.mean()
-    excess_return = average_return
+def calculate_average_return(returns):
+    return returns.mean()
 
+
+def calculate_sharpe_ratio(returns):
+    excess_return = calculate_average_return(returns)
     sharpe_ratio = excess_return / calculate_std_dev(returns)
     return sharpe_ratio
 
@@ -23,7 +25,7 @@ def calculate_skewness(returns):
 
 
 def calculate_tail_ratios(returns):
-    normalized_returns = returns - returns.mean()
+    normalized_returns = returns - calculate_average_return(returns)
 
     # Calculate the left tail ratio
     percentile1 = np.percentile(normalized_returns, 1)
