@@ -20,7 +20,7 @@ annual_return_strategy2 = 0.12  # 12% annual return
 annual_volatility_strategy1 = 0.12  # 12% annual volatility
 annual_volatility_strategy2 = 0.24  # 24% annual volatility
 
-trading_days_in_a_year = 252
+trading_days_in_a_year = 365
 
 # Calculate daily returns from annual returns
 strategy1_mu = (1 + annual_return_strategy1) ** (1 /
