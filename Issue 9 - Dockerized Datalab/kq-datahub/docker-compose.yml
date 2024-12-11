@@ -2,14 +2,13 @@ services:
   db:
     image: postgres:latest
     environment:
-      - DB_USER=${DB_USER}
-      - DB_PW=${DB_PW}
-      - DB_DB=${DB_DB}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PW}
+      - POSTGRES_DB=${DB_DB}
     ports:
       - "${DB_PORT}:${DB_PORT}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   data_scraper:
     build:
