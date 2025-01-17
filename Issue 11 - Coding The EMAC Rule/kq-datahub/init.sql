@@ -24,3 +24,6 @@ CREATE TABLE IF NOT EXISTS ohlcv (
     market_cap DOUBLE PRECISION,
     interval VARCHAR(120)
 );
+
+CREATE INDEX idx_coins_symbol ON coins(symbol);
+CREATE INDEX idx_ohlcv_coin_id ON ohlcv(coin_id);
