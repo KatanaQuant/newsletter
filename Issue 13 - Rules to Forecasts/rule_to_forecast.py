@@ -31,7 +31,7 @@ conn = psycopg2.connect(
     port=os.environ.get("DB_PORT")
 )
 
-symbolname = 'TRX'
+symbolname = 'BTC'
 
 cur = conn.cursor()
 cur.execute(f"""
