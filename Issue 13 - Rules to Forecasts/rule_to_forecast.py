@@ -38,7 +38,8 @@ cur.execute(f"""
     SELECT ohlcv.time_close, ohlcv.close
     FROM ohlcv
     JOIN coins ON ohlcv.coin_id = coins.id
-    WHERE coins.symbol = '{symbolname}';
+    WHERE coins.symbol = '{symbolname}'
+    ORDER BY ohlcv.time_close ASC;
 """)
 
 rows = cur.fetchall()
@@ -60,7 +61,7 @@ df['raw_forecast'] = df['ema_fast'] - df['ema_slow']
 
 # price_vol = df['close'].diff().rolling(25, min_periods=10).std()
 df['price_vol'] = df['close'].ewm(span=35, min_periods=10).std()
-df['fc_vol_adj'] = df['raw_forecast'] / df['price_vol']
+df['fc_vol_adj'] = df['raw_forecast'] / df['price_vol'].ffill()
 # create_plot(df, 'fc_vol_adj', symbolname)
 # print(f'Forecasts for {symbolname}')
 # print(df[['close', 'raw_forecast', 'fc_vol_adj']].tail(5))
@@ -84,6 +85,8 @@ df['capped_forecast'] = df['scaled_forecast'].clip(lower=-20, upper=20)
 # create_plot(df, 'scaled_forecast', symbolname)
 # create_plot(df, 'capped_forecast', symbolname)
 
+print(df['capped_forecast'].tail(5))
+
 print('avg_rescaled_abs_fc_capped', df['capped_forecast'].abs().mean())
 print(df[['close', 'raw_forecast', 'fc_vol_adj', 'scaling_factor', 'capped_forecast']].tail(5))
 
@@ -102,4 +105,4 @@ ax2.set_title(f'Forecast EMA {fast_lookback}_{slow_lookback}')
 ax2.xaxis.set_major_locator(ticker.MaxNLocator(nbins=10))
 
 plt.tight_layout()
-plt.savefig(f'{ſymbolname}_price_and_forecast.png', dpi=300)
+plt.savefig(f'{symbolname}_price_and_forecast.png', dpi=300)
