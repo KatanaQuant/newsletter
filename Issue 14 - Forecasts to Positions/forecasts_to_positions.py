@@ -42,7 +42,7 @@ df.set_index('time_close', inplace=True)
 df['perc_change'] = df['close'].pct_change()
 df['perc_change_ewm_vol'] = df['perc_change'].ewm(adjust=True, span=35, min_periods=10).std()
 
-daily_price_vol_perc = df['perc_change_ewm_vol'].iloc[-1] * 100
+daily_price_vol_perc = df['perc_change_ewm_vol'].iloc[-1]
 print(f'Daily price VOL %', daily_price_vol_perc, '\n')
 
 contract_unit = 1
@@ -50,12 +50,8 @@ units_bought = 1
 notional_exp = units_bought * price * contract_unit
 print(f'Notional exposure of {units_bought} unit {symbolname}', notional_exp)
 
-perc_move = 0.01
-unit_perc_pnl = notional_exp * perc_move
-print(f'PnL for 1% move owning {units_bought} units {symbolname}', unit_perc_pnl, '\n')
-
-daily_usd_risk = daily_price_vol_perc * unit_perc_pnl
-print(f'Daily USD risk of owning {units_bought} units {symbolname}', daily_usd_risk, '\n')
+daily_vol_risk = notional_exp * daily_price_vol_perc
+print(f'PnL for {daily_price_vol_perc * 100}% move owning {units_bought} units {symbolname}', daily_vol_risk, '\n')
 
 
 trading_capital = 10_000
@@ -69,7 +65,7 @@ daily_cash_risk = annual_cash_risk_target / np.sqrt(trading_days_in_year)
 print(f'Daily cash risk target', daily_cash_risk, '\n')
 
 
-units_needed_for_daily_risk = daily_cash_risk / daily_usd_risk
+units_needed_for_daily_risk = daily_cash_risk / daily_vol_risk
 print(f'Units needed for daily risk', units_needed_for_daily_risk)
 
 forecast = 13.439369
