@@ -45,9 +45,12 @@ trading_capital = 10_000
 annual_perc_risk_target = 0.20
 
 
-# fee = 0.001 #spot
-fee = 0.0055  # perp & futures
+# ByBit fees
+# fee = 0.1 #spot
+fee = 0.055  # perp & futures
 
+# convert percentage to decimal
+fee = fee / 100
 
 current_price = rows[-1][-1]
 print(f'current {symbolname} current_price', current_price)
@@ -137,6 +140,8 @@ print('Strategy Avg. Annual Return', strat_mean_ann_return)
 print('Strategy Daily Volatility', strat_std_dev.iloc[-1])
 print('Strategy Sharpe Ratio', strat_sr.iloc[-1], '\n')
 
+print('Fees paid', df['daily_fees'].sum(), '\n')
+
 
 def plot_cum_pnl(pnl_column):
     _, ax = plt.subplots(figsize=(20, 12), facecolor='#f7e9e1')
@@ -149,7 +154,7 @@ def plot_cum_pnl(pnl_column):
     plt.savefig(f'{symbolname}_{pnl_column}.png', dpi=300)
 
 
-plot_cum_pnl('cumulative_usd_pnl')
+# plot_cum_pnl('cumulative_usd_pnl')
 
 
 def plot(column_name1, column_name2):
