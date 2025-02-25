@@ -46,11 +46,11 @@ annual_perc_risk_target = 0.20
 
 
 # ByBit fees
-# fee = 0.1 #spot
-fee = 0.055  # perp & futures
+# fee_perc = 0.1 #spot
+fee_perc = 0.055  # perp & futures
 
 # convert percentage to decimal
-fee = fee / 100
+fee = fee_perc / 100
 
 current_price = rows[-1][-1]
 print(f'current {symbolname} current_price', current_price)
