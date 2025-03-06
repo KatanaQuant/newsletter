@@ -78,7 +78,8 @@ df['ema_slow'] = df['close'].ewm(span=slow_lookback, min_periods=slow_lookback).
 df['raw_forecast'] = df['ema_fast'] - df['ema_slow']
 
 
-df['price_vol'] = df['close'].ewm(span=35, min_periods=10).std()
+df['instr_price_returns'] = df['close'].diff()
+df['price_vol'] = df['instr_price_returns'].ewm(span=35, min_periods=10).std()
 df['fc_vol_adj'] = df['raw_forecast'] / df['price_vol'].ffill()
 
 
