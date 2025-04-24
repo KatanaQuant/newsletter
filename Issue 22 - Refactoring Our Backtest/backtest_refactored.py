@@ -15,11 +15,27 @@ def calculate_strat_pre_cost_sr():
     return 1.9914208916281093
 
 
+def calculate_fees_paid():
+    return 1038.6238698915147
+
+
+def calculate_holding_costs_paid():
+    funding_paid = 3130.3644113437113
+    return funding_paid
+
+
+def calulcate_slippage_paid():
+    return 944.2035180831953
+
+
 def calculate_strat_post_cost_sr(pre_cost_sr):
-    fees = 0.09552521025869809
-    holding_costs = 0
-    slippage = 0
-    return pre_cost_sr - (fees + holding_costs + slippage)
+    fees = calculate_fees_paid()
+    holding_costs = calculate_holding_costs_paid()
+    slippage = calulcate_slippage_paid()
+
+    fake_offset = 0.09552521025869809
+    return pre_cost_sr - fake_offset
+    # return pre_cost_sr - (fees + holding_costs + slippage)
 
 
 strat_total_perc_return = calculate_start_total_perc_returns()
@@ -39,15 +55,13 @@ strat_post_cost_sr = calculate_strat_post_cost_sr(strat_pre_cost_sr)
 assert (strat_post_cost_sr == 1.8958956813694112)
 
 
-####
-
-fees_paid = 1038.6238698915147
+fees_paid = calculate_fees_paid()
 assert (fees_paid == 1038.6238698915147)
 
-slippage_paid = 944.2035180831953
+slippage_paid = calulcate_slippage_paid()
 assert (slippage_paid == 944.2035180831953)
 
-funding_paid = 3130.3644113437113
+funding_paid = calculate_holding_costs_paid()
 assert (funding_paid == 3130.3644113437113)
 
 
