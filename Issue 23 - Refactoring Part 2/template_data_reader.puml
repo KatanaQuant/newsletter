@@ -1,0 +1,39 @@
+@startuml PriceDataSources
+
+abstract class PriceDataSource {
+  + {abstract} fetch_raw_price_series(symbol: str, frequency: str): DataFrame
+  + {abstract} transform_columns(df: DataFrame): DataFrame
+  # prepare_price_series(df: DataFrame, frequency: str): DataFrame
+  + get_price_series(symbol: str, frequency: str): DataFrame
+}
+
+note right of PriceDataSource::get_price_series
+  Template Method:
+  1. Fetch raw data
+  2. Transform columns
+  3. Prepare time series
+end note
+
+class DBReader extends PriceDataSource {
+  - connection: Connection
+  + fetch_raw_price_series(symbol: str, frequency: str): DataFrame
+  + transform_columns(df: DataFrame): DataFrame
+}
+
+class CSVReader extends PriceDataSource {
+  - base_path: str
+  + fetch_raw_price_series(symbol: str, frequency: str): DataFrame
+  + transform_columns(df: DataFrame): DataFrame
+}
+
+note right of DBReader::fetch_raw_price_series
+  Reads from SQL database
+  Returns raw DataFrame
+end note
+
+note right of CSVReader::fetch_raw_price_series
+  Reads from CSV files
+  Returns raw DataFrame
+end note
+
+@enduml

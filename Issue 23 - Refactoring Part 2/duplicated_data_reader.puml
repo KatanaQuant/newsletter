@@ -1,0 +1,28 @@
+@startuml PriceDataSources
+
+abstract class PriceDataSource {
+  + get_price_series(symbol: str, frequency: str): DataFrame
+}
+
+
+class DBReader extends PriceDataSource {
+  + get_price_series(symbol: str, frequency: str): DataFrame
+}
+
+note right of DBReader::get_price_series
+  Connects to PostgreSQL
+  Executes SQL query
+  Returns DataFrame
+end note
+
+class CSVReader extends PriceDataSource {
+  + get_price_series(symbol: str, frequency: str): DataFrame
+}
+
+note right of CSVReader::get_price_series
+  Reads from local CSV file
+  Parses timestamp and price
+  Returns DataFrame
+end note
+
+@enduml

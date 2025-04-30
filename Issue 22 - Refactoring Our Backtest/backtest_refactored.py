@@ -1,5 +1,5 @@
 
-def calculate_start_total_perc_returns():
+def calculate_strat_total_perc_returns():
     return 958.3412684422372
 
 
@@ -38,7 +38,7 @@ def calculate_strat_post_cost_sr(pre_cost_sr):
     # return pre_cost_sr - (fees + holding_costs + slippage)
 
 
-strat_total_perc_return = calculate_start_total_perc_returns()
+strat_total_perc_return = calculate_strat_total_perc_returns()
 assert (strat_total_perc_return == 958.3412684422372)
 
 strat_mean_ann_perc_return = calculate_strat_mean_ann_perc_return()
