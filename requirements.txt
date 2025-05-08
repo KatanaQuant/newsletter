@@ -1,0 +1,7 @@
+openpyxl
+numpy
+pandas
+scipy
+mplfinance
+matplotlib
+tabulate

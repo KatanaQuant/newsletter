@@ -1,0 +1,33 @@
+@startuml
+interface DataStore {
+  + fetch_raw_data(symbol: str, frequency: str): DataFrame
+}
+
+class DBStore {
+  + fetch_raw_data(symbol: str, frequency: str): DataFrame
+}
+
+class CSVStore {
+  - base_path: str
+  + <<constructor>> CSVStore(base_path: str)
+  + fetch_raw_data(symbol: str, frequency: str): DataFrame
+}
+
+class PriceReader {
+  - store: DataStore
+  - index_column_name: str
+  - price_column_name: str
+  + TARGET_INDEX_COLUMN_NAME: str
+  + TARGET_PRICE_COLUMN_NAME: str
+  + <<constructor>> PriceReader(store: DataStore, index_column: str, price_column: str)
+  + fetch_price_series(symbol: str, frequency: str): DataFrame
+  - transform_columns(df: DataFrame): DataFrame
+  - prepare_price_series(df: DataFrame, frequency: str): DataFrame
+  - check_nan_values(df: DataFrame): void
+}
+
+DataStore <|.. DBStore
+DataStore <|.. CSVStore
+PriceReader o-- DataStore
+
+@enduml
