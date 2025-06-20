@@ -159,8 +159,6 @@ if __name__ == "__main__":
     db_store = DBStore()
     db_reader = PriceReader(db_store, index_column=0, price_column=1)
     price_series = db_reader.fetch_price_series(symbolname, trading_frequency)
-    print(price_series.tail())
-    exit()
 
     instrument = Instrument(
         symbolname,
